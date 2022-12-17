@@ -1,9 +1,12 @@
-function getFilesToBackup(lastBackup, changes) {
-    const setChanges = changes.filter(item => item[1] > lastBackup)
-    return [...new Set(setChanges.map(item => item[0]))].sort((x, y) => x - y)
-}
+/*
+Para evitar perder datos cuando el servidor se cae, Papa Noel ha decidido hacer backups incrementales. Un hacker llamado S4vitelf le esta ayudando.
 
-// Main program examples
+Por un lado, tenemos el timestamp de cuándo se hizo el último backup.
+
+También tenemos los cambios que se han realizado en un array de arrays. Cada array interno contiene dos elementos: el id del archivo modificado y el timestamp de la modificación.
+
+Tienes que crear un programa que devuelva un array con las id de los archivos que tendríamos que hacer backup porque han sido modificados desde el último backup y ordenados de forma ascendente. Ejemplo:
+
 const lastBackup = 1546300800
 const changes = [
   [ 3, 1546301100 ],
@@ -25,3 +28,44 @@ getFilesToBackup(lastBackup, changes) // => [ 1, 3 ]
 
 // Tenemos que hacer una copia de seguridad
 // de los archivos 1 y 3.
+Recuerda que:
+
+Devuelve la id de los archivos que han sido modificados después del último backup.
+Devuelve un array vacío si no hay archivos que hacer backup.
+Recuerda que deben estar ordenados los id de forma ascendente.
+*/
+
+function getFilesToBackup(lastBackup, changes) {
+    const setChanges = changes.filter(item => item[1] > lastBackup)
+    return [...new Set(setChanges.map(item => item[0]))].sort((x, y) => x - y)
+}
+
+// Main program examples
+const lastBackup = 1546300800
+const changes = [
+  [ 3, 1546301100 ],
+  [ 2, 1546300800 ],
+  [ 1, 1546300800 ],
+  [ 1, 1546300900 ],
+  [ 1, 1546301000 ]
+]
+
+getFilesToBackup(lastBackup, changes) // => [ 1, 3 ]
+
+getFilesToBackup(1556300600, [
+  [ 1, 1546300800 ],
+  [ 2, 1546300800 ],
+  [ 1, 1546300900 ],
+  [ 1, 1546301000 ],
+  [ 3, 1546301100 ]
+]) // => []
+
+getFilesToBackup(1546300600, [
+  [ 1, 1546300800 ],
+  [ 2, 1546300800 ],
+  [ 1, 1546300900 ],
+  [ 1, 1546301000 ],
+  [ 3, 1546301100 ]
+]) // => [ 1, 2, 3 ]
+
+getFilesToBackup(1546300600, []) // => []
